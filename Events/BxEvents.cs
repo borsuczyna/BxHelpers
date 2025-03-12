@@ -61,7 +61,7 @@ public class BxEvents : BaseScript
     public static void SendServerEvent(BaseEvent data)
     {
         var dataType = data.GetType().Name;
-        var serialized = BxSerializer.Serialize(data);
+        var serialized = BxEncoder.Encode(BxSerializer.Serialize(data));
         TriggerServerEvent("triggerServerEvent", dataType, serialized);
     }
     #endif
@@ -72,7 +72,7 @@ public class BxEvents : BaseScript
     /// </summary>
     private void OnTriggerServerEvent([FromSource] Player client, string dataType, string serializedData)
     {
-        var data = BxSerializer.Deserialize<BaseEvent>(serializedData);
+        var data = BxSerializer.Deserialize<BaseEvent>(BxEncoder.Decode(serializedData));
 
         if (!data.Validate())
         {
@@ -98,7 +98,7 @@ public class BxEvents : BaseScript
                 var attr = (BxEvent)Attribute.GetCustomAttribute(method, typeof(BxEvent));
                 if (attr != null && attr.Type.Name == dataType)
                 {
-                    var deserializedData = BxSerializer.Deserialize(serializedData, attr.Type);
+                    var deserializedData = BxSerializer.Deserialize(BxEncoder.Decode(serializedData), attr.Type);
                     if (!method.IsStatic)
                     {
                         Debug.WriteLine("Method must be static!!");
@@ -120,7 +120,7 @@ public class BxEvents : BaseScript
     public static void SendClientEvent(Player client, BaseEvent data)
     {
         var dataType = data.GetType().Name;
-        var serialized = BxSerializer.Serialize(data);
+        var serialized = BxEncoder.Encode(BxSerializer.Serialize(data));
         TriggerClientEvent(client, "triggerClientEvent", dataType, serialized);
     }
     #endif
@@ -140,7 +140,7 @@ public class BxEvents : BaseScript
                 var attr = (BxEvent)Attribute.GetCustomAttribute(method, typeof(BxEvent));
                 if (attr != null && attr.Type.Name == dataType)
                 {
-                    var deserializedData = BxSerializer.Deserialize(serializedData, attr.Type);
+                    var deserializedData = BxSerializer.Deserialize(BxEncoder.Decode(serializedData), attr.Type);
                     if (!method.IsStatic)
                     {
                         Debug.WriteLine("Method must be static!!");
@@ -161,7 +161,7 @@ public class BxEvents : BaseScript
     public static void SendEvent(BaseEvent data)
     {
         var dataType = data.GetType().Name;
-        var serialized = BxSerializer.Serialize(data);
+        var serialized = BxEncoder.Encode(BxSerializer.Serialize(data));
         TriggerEvent("triggerEvent", dataType, serialized);
     }
 
@@ -179,7 +179,7 @@ public class BxEvents : BaseScript
                 var attr = (BxEvent)Attribute.GetCustomAttribute(method, typeof(BxEvent));
                 if (attr != null && attr.Type.Name == dataType)
                 {
-                    var deserializedData = BxSerializer.Deserialize(serializedData, attr.Type);
+                    var deserializedData = BxSerializer.Deserialize(BxEncoder.Decode(serializedData), attr.Type);
                     if (!method.IsStatic)
                     {
                         Debug.WriteLine("Method must be static!!");
