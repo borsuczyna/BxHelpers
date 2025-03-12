@@ -54,7 +54,7 @@ public static void TestEvent(Player client, TestEvent data)
 }
 ```
 
-- **Player client**: A player who triggered the event on the server. Since the server knows who the player is, it’s not possible for a cheater to fake the sender of the event.
+- **Player client**: A player who triggered the event on the server. Since the server knows who the player is, it’s not possible for a cheater to fake the sender of the event. (only when sending from client-side)
 
 #### Triggering the event from client-side
 ```cs
