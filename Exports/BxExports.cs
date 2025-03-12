@@ -24,7 +24,7 @@ public class BxExports : BaseScript
     /// <summary>
     /// Calls an export from another resource.
     /// </summary>
-    public static T CallExport<T>(string resourceName, BaseExport data) where T : class
+    public static T? CallExport<T>(string resourceName, BaseExport data) where T : class
     {
         var dataType = data.GetType().Name;
         var serializedData = BxSerializer.Serialize(data);
@@ -44,13 +44,13 @@ public class BxExports : BaseScript
             Debug.WriteLine($"Resource '{resourceName}' *probably* does not support BxExports, visit https://github.com/borsuczyna/BxHelpers?tab=readme-ov-file#failed-to-call-export for more information.");
         }
 
-        return default;
+        return null;
     }
 
     /// <summary>
     /// Executes an export function when called by another resource.
     /// </summary>
-    public string ExecuteExport(string callerResourceName, string dataType, string serializedData)
+    public string? ExecuteExport(string callerResourceName, string dataType, string serializedData)
     {
         var types = Assembly.GetExecutingAssembly().GetTypes();
         foreach (var type in types)

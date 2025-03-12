@@ -8,7 +8,7 @@ namespace BxHelpers;
 /// </summary>
 public class BxNetworkHelper : BaseScript
 {
-    private static PlayerList PlayersList;
+    private static PlayerList PlayersList = null!;
 
     public BxNetworkHelper()
     {
@@ -19,7 +19,7 @@ public class BxNetworkHelper : BaseScript
     /// <summary>
     /// Retrieves an entity or player from a network entity address.
     /// </summary>
-    public static object FromNetworkEntity(string address)
+    public static object? FromNetworkEntity(string address)
     {
         var split = address.Split('-');
         if (split.Length != 2)
@@ -58,7 +58,7 @@ public class BxNetworkHelper : BaseScript
     /// <summary>
     /// Converts an entity or player into a network entity address.
     /// </summary>
-    public static string ToNetworkEntity(object entity)
+    public static string? ToNetworkEntity(object entity)
     {
         if (entity is Player)
         {
