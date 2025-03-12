@@ -11,13 +11,15 @@ public class BxEvents : BaseScript
     /// <summary>
     /// Stores a history of event hashes to prevent resending the same event.
     /// </summary>
-    public static List<string> _hashHistory = new List<string>();
+    private static List<string> _hashHistory = new List<string>();
+    private static PlayerList _players = null!;
 
     #region Constructor
     public BxEvents()
     {
         // General event handler
         EventHandlers["triggerEvent"] += new Action<string, string>(OnTriggerEvent);
+        _players = Players;
 
         #if SERVER
         // Server-side event handler
@@ -122,6 +124,33 @@ public class BxEvents : BaseScript
         var dataType = data.GetType().Name;
         var serialized = BxEncoder.Encode(BxSerializer.Serialize(data));
         TriggerClientEvent(client, "triggerClientEvent", dataType, serialized);
+    }
+
+    /// <summary>
+    /// Sends a client event to all players.
+    /// </summary>
+    public static void SendClientEvent(BaseEvent data)
+    {
+        var dataType = data.GetType().Name;
+        var serialized = BxEncoder.Encode(BxSerializer.Serialize(data));
+        TriggerClientEvent("triggerClientEvent", dataType, serialized);
+    }
+
+    /// <summary>
+    /// Sends a client event to all players besides the specified player.
+    /// </summary>
+    public static void SendClientEventExcept(Player client, BaseEvent data)
+    {
+        var dataType = data.GetType().Name;
+        var serialized = BxEncoder.Encode(BxSerializer.Serialize(data));
+
+        foreach (Player player in _players)
+        {
+            if (player != client)
+            {
+                TriggerClientEvent(player, "triggerClientEvent", dataType, serialized);
+            }
+        }
     }
     #endif
 
