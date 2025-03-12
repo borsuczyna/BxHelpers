@@ -15,6 +15,11 @@ It allows you to send more advanced types of data with events and exports, for e
    <Compile Include="../../Helpers/**/*.cs" />
    ```
 
+3. Enable nullable reference types in your `.csproj` file:
+    ```xml
+    <Nullable>enable</Nullable>
+    ```
+
 ***Important***: When using exports make sure both resources include this library.
 
 ## **Events**
