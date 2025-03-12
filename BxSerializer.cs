@@ -36,12 +36,26 @@ public class BxJsonConverter : JsonConverter
     {
         if (value is Entity entity)
         {
-            var serializedValue = new BxSerializedValue(BxSerializedValueType.Entity, BxNetworkHelper.ToNetworkEntity(entity));
+            var networkEntity = BxNetworkHelper.ToNetworkEntity(entity);
+            if (networkEntity == null)
+            {
+                writer.WriteNull();
+                return;
+            }
+
+            var serializedValue = new BxSerializedValue(BxSerializedValueType.Entity, networkEntity);
             serializer.Serialize(writer, serializedValue);
         }
         else if (value is Player player)
         {
-            var serializedValue = new BxSerializedValue(BxSerializedValueType.Player, BxNetworkHelper.ToNetworkEntity(player));
+            var networkEntity = BxNetworkHelper.ToNetworkEntity(player);
+            if (networkEntity == null)
+            {
+                writer.WriteNull();
+                return;
+            }
+
+            var serializedValue = new BxSerializedValue(BxSerializedValueType.Player, networkEntity);
             serializer.Serialize(writer, serializedValue);
         }
         else
@@ -85,7 +99,7 @@ public static class BxSerializer
         return JsonConvert.SerializeObject(value, settings);
     }
 
-    public static T Deserialize<T>(string value) where T : class
+    public static T? Deserialize<T>(string value) where T : class
     {
         // first, try deserialize it to BxSerializedValue, if it succeeds, then return it
         try

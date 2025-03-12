@@ -2,13 +2,13 @@ using CitizenFX.Core;
 
 public class BxBaseScript : BaseScript
 {
-    new public static EventHandlerDictionary EventHandlers;
-    new public static StateBag GlobalState;
-    new public static ExportDictionary Exports;
-    new public static PlayerList Players;
+    new public static EventHandlerDictionary EventHandlers = null!;
+    new public static StateBag GlobalState = null!;
+    new public static ExportDictionary Exports = null!;
+    new public static PlayerList Players = null!;
 
     #if CLIENT
-    new public static Player LocalPlayer;
+    new public static Player LocalPlayer = null!;
     #endif
 
     public BxBaseScript()

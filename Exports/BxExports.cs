@@ -8,8 +8,8 @@ namespace BxHelpers.Exports;
 
 public class BxExports : BaseScript
 {
-    private static string _thisResourceName;
-    private static ExportDictionary _exports;
+    private static string _thisResourceName = null!;
+    private static ExportDictionary _exports = null!;
 
     public BxExports()
     {
@@ -18,7 +18,7 @@ public class BxExports : BaseScript
         _exports = Exports;
 
         // Register an export function
-        Exports.Add("ExecuteExport", new Func<string, string, string, object>(ExecuteExport));
+        Exports.Add("ExecuteExport", new Func<string, string, string, object?>(ExecuteExport));
     }
 
     /// <summary>
