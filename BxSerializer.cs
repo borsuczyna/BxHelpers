@@ -107,14 +107,10 @@ public static class BxSerializer
             var serializedValue = JsonConvert.DeserializeObject<BxSerializedValue>(value);
             if (serializedValue != null)
             {
-                if (serializedValue.Type == BxSerializedValueType.Player)
+                var networkEntity = BxNetworkHelper.FromNetworkEntity(serializedValue.Value) as T;
+                if (networkEntity != null)
                 {
-                    var val = BxNetworkHelper.FromNetworkEntity(serializedValue.Value) as T;
-                    return val;
-                }
-                else if (serializedValue.Type == BxSerializedValueType.Entity)
-                {
-                    return BxNetworkHelper.FromNetworkEntity(serializedValue.Value) as T;
+                    return networkEntity;
                 }
             }
         }
