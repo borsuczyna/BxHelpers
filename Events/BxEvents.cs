@@ -74,7 +74,7 @@ public class BxEvents : BaseScript
     {
         var data = BxSerializer.Deserialize<BaseEvent>(BxEncoder.Decode(serializedData));
 
-        if (!data.Validate())
+        if (data == null || !data.Validate())
         {
             Debug.WriteLine($"Invalid data received from client {client.Handle}.");
             return;
