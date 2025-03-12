@@ -41,7 +41,7 @@ public class BxExports : BaseScript
         }
         catch
         {
-            Debug.WriteLine($"Resource '{resourceName}' *probably* does not support BxExports, visit github.com/borsuczyna/BxHelpers for more information.");
+            Debug.WriteLine($"Resource '{resourceName}' *probably* does not support BxExports, visit https://github.com/borsuczyna/BxHelpers?tab=readme-ov-file#failed-to-call-export for more information.");
         }
 
         return default;
