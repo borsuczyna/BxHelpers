@@ -123,5 +123,10 @@ var response = BxExports.CallExport<string>(new TestExport("test"));
 Debug.WriteLine($"Export response: {response}");
 ```
 
+# Failed to call export
+When you get the message `Resource '{resourceName}' *probably* does not support BxExports`, that means the resource you are trying to call export from probably does not have the BxExports library included.
+
+[Check Installation tab](#installation)
+
 # **Contributing**
 Pull requests are welcome.
