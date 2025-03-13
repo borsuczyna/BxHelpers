@@ -44,18 +44,25 @@ public class BxExports : BaseScript
     /// </summary>
     public static T? CallExport<T>(string resourceName, BaseExport data) where T : class
     {
-        var returnVal = CallExportInner(resourceName, data);
-        if (returnVal == null)
+        try
+        {
+            var returnVal = CallExportInner(resourceName, data);
+            if (returnVal == null)
+            {
+                return null;
+            }
+
+            if (typeof(T).IsClass)
+            {
+                return BxSerializer.Deserialize<T>(returnVal.ToString());
+            }
+
+            return (T)Convert.ChangeType(returnVal, typeof(T));
+        }
+        catch
         {
             return null;
         }
-
-        if (typeof(T).IsClass)
-        {
-            return BxSerializer.Deserialize<T>(returnVal.ToString());
-        }
-
-        return (T)Convert.ChangeType(returnVal, typeof(T));
     }
 
     /// <summary>
@@ -63,13 +70,20 @@ public class BxExports : BaseScript
     /// </summary>
     public static T? CallExportSimple<T>(string resourceName, BaseExport data)
     {
-        var returnVal = CallExportInner(resourceName, data);
-        if (returnVal == null)
+        try
+        {
+            var returnVal = CallExportInner(resourceName, data);
+            if (returnVal == null)
+            {
+                return default;
+            }
+
+            return (T)Convert.ChangeType(returnVal, typeof(T));
+        }
+        catch
         {
             return default;
         }
-
-        return (T)Convert.ChangeType(returnVal, typeof(T));
     }
 
     /// <summary>
