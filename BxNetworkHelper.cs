@@ -56,6 +56,14 @@ public class BxNetworkHelper : BaseScript
     }
 
     /// <summary>
+    /// Retrieves the network ID of a given entity handle.
+    /// </summary>
+    public static int GetEntityAddress(uint handle)
+    {
+        return GetEntityAddress(Entity.FromHandle((int)handle));
+    }
+
+    /// <summary>
     /// Converts a player into a network entity address.
     /// </summary>
     public static string ToNetworkEntity(Player player)
@@ -69,5 +77,13 @@ public class BxNetworkHelper : BaseScript
     public static string ToNetworkEntity(Entity entity)
     {
         return $"entity-{GetEntityAddress(entity)}";
+    }
+
+    /// <summary>
+    /// Converts an entity handle into a network entity address.
+    /// </summary>
+    public static string ToNetworkEntity(uint handle)
+    {
+        return $"entity-{GetEntityAddress(handle)}";
     }
 }
