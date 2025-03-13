@@ -1,5 +1,6 @@
 using System;
 using System.Reflection;
+using System.Threading.Tasks;
 using CitizenFX.Core;
 using CitizenFX.Core.Native;
 using Models.Exports;
@@ -21,14 +22,14 @@ public class BxExports : BaseScript
         Exports.Add("ExecuteExport", new Func<string, string, string, object?>(ExecuteExport));
     }
 
-    private static object? CallExportInner(string resourceName, BaseExport data)
+    private static async Task<object?> CallExportInner(string resourceName, BaseExport data)
     {
         var dataType = data.GetType().Name;
         var serializedData = BxSerializer.Serialize(data);
 
         try
         {
-            var returnVal = _exports[resourceName].ExecuteExport(_thisResourceName, dataType, serializedData);
+            var returnVal = await Task.Run(() => _exports[resourceName].ExecuteExport(_thisResourceName, dataType, serializedData));
             return returnVal;
         }
         catch
@@ -46,7 +47,7 @@ public class BxExports : BaseScript
     {
         try
         {
-            var returnVal = CallExportInner(resourceName, data);
+            var returnVal = CallExportInner(resourceName, data).Result;
             if (returnVal == null)
             {
                 return null;
@@ -72,7 +73,7 @@ public class BxExports : BaseScript
     {
         try
         {
-            var returnVal = CallExportInner(resourceName, data);
+            var returnVal = CallExportInner(resourceName, data).Result;
             if (returnVal == null)
             {
                 return default;
@@ -92,6 +93,61 @@ public class BxExports : BaseScript
     public static void CallExport(string resourceName, BaseExport data)
     {
         CallExport<object>(resourceName, data);
+    }
+
+    /// <summary>
+    /// Calls an export from another resource and returns the result.
+    /// </summary>
+    public static async Task<T?> CallExportAsync<T>(string resourceName, BaseExport data) where T : class
+    {
+        try
+        {
+            var returnVal = await CallExportInner(resourceName, data);
+            if (returnVal == null)
+            {
+                return null;
+            }
+
+            if (typeof(T).IsClass)
+            {
+                return BxSerializer.Deserialize<T>(returnVal.ToString());
+            }
+
+            return (T)Convert.ChangeType(returnVal, typeof(T));
+        }
+        catch
+        {
+            return null;
+        }
+    }
+
+    /// <summary>
+    /// Calls an export from another resource and returns the result.
+    /// </summary>
+    public static async Task<T?> CallExportSimpleAsync<T>(string resourceName, BaseExport data)
+    {
+        try
+        {
+            var returnVal = await CallExportInner(resourceName, data);
+            if (returnVal == null)
+            {
+                return default;
+            }
+
+            return (T)Convert.ChangeType(returnVal, typeof(T));
+        }
+        catch
+        {
+            return default;
+        }
+    }
+
+    /// <summary>
+    /// Calls an export from another resource.
+    /// </summary>
+    public static async Task CallExportAsync(string resourceName, BaseExport data)
+    {
+        await CallExportAsync<object>(resourceName, data);
     }
 
     /// <summary>
