@@ -56,21 +56,18 @@ public class BxNetworkHelper : BaseScript
     }
 
     /// <summary>
-    /// Converts an entity or player into a network entity address.
+    /// Converts a player into a network entity address.
     /// </summary>
-    public static string? ToNetworkEntity(object entity)
+    public static string ToNetworkEntity(Player player)
     {
-        if (entity is Player)
-        {
-            var player = ((Player)entity).Character;
-            return $"player-{GetEntityAddress(player)}";
-        }
-        else if (entity is Entity)
-        {
-            var ent = (Entity)entity;
-            return $"entity-{GetEntityAddress(ent)}";
-        }
+        return $"player-{GetEntityAddress(player.Character)}";
+    }
 
-        return null;
+    /// <summary>
+    /// Converts an entity into a network entity address.
+    /// </summary>
+    public static string ToNetworkEntity(Entity entity)
+    {
+        return $"entity-{GetEntityAddress(entity)}";
     }
 }

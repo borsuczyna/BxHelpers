@@ -21,10 +21,7 @@ public class BxExports : BaseScript
         Exports.Add("ExecuteExport", new Func<string, string, string, object?>(ExecuteExport));
     }
 
-    /// <summary>
-    /// Calls an export from another resource.
-    /// </summary>
-    public static T? CallExport<T>(string resourceName, BaseExport data) where T : class
+    private static object? CallExportInner(string resourceName, BaseExport data)
     {
         var dataType = data.GetType().Name;
         var serializedData = BxSerializer.Serialize(data);
@@ -32,12 +29,7 @@ public class BxExports : BaseScript
         try
         {
             var returnVal = _exports[resourceName].ExecuteExport(_thisResourceName, dataType, serializedData);
-            if (typeof(T).IsClass)
-            {
-                return BxSerializer.Deserialize<T>(returnVal);
-            }
-
-            return (T)Convert.ChangeType(returnVal, typeof(T));
+            return returnVal;
         }
         catch
         {
@@ -45,6 +37,47 @@ public class BxExports : BaseScript
         }
 
         return null;
+    }
+
+    /// <summary>
+    /// Calls an export from another resource and returns the result.
+    /// </summary>
+    public static T? CallExport<T>(string resourceName, BaseExport data) where T : class
+    {
+        var returnVal = CallExportInner(resourceName, data);
+        if (returnVal == null)
+        {
+            return null;
+        }
+
+        if (typeof(T).IsClass)
+        {
+            return BxSerializer.Deserialize<T>(returnVal.ToString());
+        }
+
+        return (T)Convert.ChangeType(returnVal, typeof(T));
+    }
+
+    /// <summary>
+    /// Calls an export from another resource and returns the result.
+    /// </summary>
+    public static T? CallExportSimple<T>(string resourceName, BaseExport data)
+    {
+        var returnVal = CallExportInner(resourceName, data);
+        if (returnVal == null)
+        {
+            return default;
+        }
+
+        return (T)Convert.ChangeType(returnVal, typeof(T));
+    }
+
+    /// <summary>
+    /// Calls an export from another resource.
+    /// </summary>
+    public static void CallExport(string resourceName, BaseExport data)
+    {
+        CallExport<object>(resourceName, data);
     }
 
     /// <summary>
