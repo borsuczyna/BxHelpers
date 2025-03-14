@@ -1,7 +1,7 @@
 using System;
 using CitizenFX.Core;
 using System.Reflection;
-using Models.Events;
+using BxHelpers.Models.Events;
 using System.Collections.Generic;
 
 namespace BxHelpers.Events;
